@@ -219,21 +219,34 @@
   .canvas-frame::before { content: ''; position: absolute; inset: 0; z-index: 2; pointer-events: none; background: linear-gradient(rgba(0,229,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,255,0.02) 1px, transparent 1px); background-size: 40px 40px; }
   #gameCanvas { display: block; width: 100%; height: auto; image-rendering: pixelated; }
 
-  .game-overlay { position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; align-items: center; justify-content: center; background: rgba(2,11,24,0.92); backdrop-filter: blur(6px); text-align: center; padding: 30px; transition: opacity 0.4s; }
+  .game-overlay {
+    position: absolute; inset: 0; z-index: 10;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: flex-start;
+    background: rgba(2,11,24,0.93);
+    backdrop-filter: blur(6px);
+    text-align: center;
+    padding: 16px 16px 20px;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 0;
+  }
+  .game-overlay::before { content: ''; flex: 1; min-height: 6px; max-height: 36px; }
+  .game-overlay::after  { content: ''; flex: 1; min-height: 6px; max-height: 36px; }
   .game-overlay.hidden { display: none; }
-  .overlay-icon { font-size: 3.5rem; margin-bottom: 16px; }
-  .overlay-title { font-family: 'Orbitron', sans-serif; font-size: clamp(1.2rem, 3vw, 2rem); font-weight: 900; margin-bottom: 10px; }
+  .overlay-icon { font-size: clamp(1.8rem, 7vw, 3.2rem); margin-bottom: 6px; line-height: 1.1; }
+  .overlay-title { font-family: 'Orbitron', sans-serif; font-size: clamp(1rem, 4.5vw, 1.8rem); font-weight: 900; margin-bottom: 8px; line-height: 1.2; }
   .overlay-title.success { color: var(--neon); text-shadow: var(--glow); }
   .overlay-title.fail { color: #ff4444; text-shadow: 0 0 20px rgba(255,68,68,0.5); }
   .overlay-title.neutral { color: #fff; }
-  .overlay-sub { font-size: 0.88rem; color: var(--text-dim); letter-spacing: 2px; margin-bottom: 24px; font-weight: 300; max-width: 400px; }
+  .overlay-sub { font-size: clamp(0.68rem, 2.5vw, 0.88rem); color: var(--text-dim); letter-spacing: 1px; margin-bottom: 12px; font-weight: 300; max-width: 340px; line-height: 1.5; }
 
-  .code-box { background: rgba(0,229,255,0.08); border: 2px solid var(--neon); border-radius: 12px; padding: 18px 36px; margin: 16px 0 28px; font-family: 'Orbitron', sans-serif; font-size: 2rem; font-weight: 900; color: var(--neon); letter-spacing: 10px; text-shadow: var(--glow-strong); box-shadow: var(--glow); animation: code-flicker 0.1s ease infinite alternate; }
+  .code-box { background: rgba(0,229,255,0.08); border: 2px solid var(--neon); border-radius: 10px; padding: clamp(8px,2.5vw,18px) clamp(14px,4vw,36px); margin: 8px 0 14px; font-family: 'Orbitron', sans-serif; font-size: clamp(1.2rem, 5vw, 2rem); font-weight: 900; color: var(--neon); letter-spacing: clamp(4px,2vw,10px); text-shadow: var(--glow-strong); box-shadow: var(--glow); animation: code-flicker 0.1s ease infinite alternate; }
   @keyframes code-flicker { 0%{opacity:1} 100%{opacity:0.92} }
 
-  .level-announce { font-family: 'Orbitron', sans-serif; font-size: clamp(0.9rem,2vw,1.3rem); font-weight: 700; letter-spacing: 4px; color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.5); margin-bottom: 8px; }
+  .level-announce { font-family: 'Orbitron', sans-serif; font-size: clamp(0.8rem, 3vw, 1.3rem); font-weight: 700; letter-spacing: 3px; color: #ffd700; text-shadow: 0 0 20px rgba(255,215,0,0.5); margin-bottom: 6px; }
 
-  .game-btn { font-family: 'Orbitron', sans-serif; font-size: 0.75rem; font-weight: 700; letter-spacing: 3px; text-transform: uppercase; padding: 12px 32px; border-radius: 8px; border: none; cursor: pointer; transition: all 0.3s; }
+  .game-btn { font-family: 'Orbitron', sans-serif; font-size: clamp(0.65rem, 2.5vw, 0.8rem); font-weight: 700; letter-spacing: 2px; text-transform: uppercase; padding: clamp(10px,3vw,13px) clamp(22px,6vw,32px); border-radius: 8px; border: none; cursor: pointer; transition: all 0.3s; min-width: 130px; touch-action: manipulation; }
   .game-btn.primary { background: linear-gradient(135deg, var(--neon2), var(--neon)); color: #000; box-shadow: 0 0 20px rgba(0,229,255,0.3); }
   .game-btn.primary:hover { box-shadow: var(--glow-strong); transform: scale(1.05); }
   .game-btn.danger { background: linear-gradient(135deg, #cc0000, #ff4444); color: #fff; box-shadow: 0 0 20px rgba(255,68,68,0.3); }
@@ -524,7 +537,7 @@
       </div>
       <div class="hud-item">
         <div class="hud-label">Süre (sn)</div>
-        <div class="hud-value" id="hud-time">15</div>
+        <div class="hud-value" id="hud-time">20</div>
       </div>
       <div class="hud-item">
         <div class="hud-label">Canlar</div>
@@ -609,7 +622,7 @@ const W = canvas.width, H = canvas.height;
 
 // ── Constants ──
 const SHIP_SIZE      = 18;
-const SHIP_SPEED     = 3.5;
+const SHIP_SPEED     = 4.0;    // artırıldı (eskiden 3.5)
 const LEVEL_TIME     = 15000;   // 15 seconds per level
 const MAX_LIVES      = 3;
 const HIT_COOLDOWN   = 1200;    // ms invincibility after hit
@@ -828,12 +841,12 @@ function update() {
   invincible = (now - lastHitTime) < HIT_COOLDOWN;
 
   // Ship movement
-  if (keys.up)    ship.vy -= 0.6;
-  if (keys.down)  ship.vy += 0.6;
-  if (keys.left)  ship.vx -= 0.6;
-  if (keys.right) ship.vx += 0.6;
-  ship.vx *= 0.82;
-  ship.vy *= 0.82;
+  if (keys.up)    ship.vy -= 1.0;
+  if (keys.down)  ship.vy += 1.0;
+  if (keys.left)  ship.vx -= 1.0;
+  if (keys.right) ship.vx += 1.0;
+  ship.vx *= 0.84;
+  ship.vy *= 0.84;
   const mag = Math.hypot(ship.vx, ship.vy);
   if (mag > SHIP_SPEED) { ship.vx = ship.vx/mag*SHIP_SPEED; ship.vy = ship.vy/mag*SHIP_SPEED; }
   ship.x += ship.vx;
